@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.versions)
-    cleanup
     base
 }
 
