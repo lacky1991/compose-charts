@@ -1,5 +1,8 @@
 # composecharts
 
+[![Release](https://jitpack.io/v/lacky1991/compose-charts.svg)]
+(https://jitpack.io/#lacky1991/compose-charts)
+
 ![Build](https://github.com/lacky1991/compose-charts/workflows/Pre%20Merge%20Checks/badge.svg)
 
 This is your new Kotlin Android Project! Happy hacking!
