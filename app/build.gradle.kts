@@ -35,34 +35,40 @@ android {
         }
     }
 
-    lint {
+  /*  lint {
         isWarningsAsErrors = true
         isAbortOnError = true
+    }*/
+
+    buildFeatures {
+        compose = true
     }
 
-    // Use this block to configure different flavors
-//    flavorDimensions("version")
-//    productFlavors {
-//        create("full") {
-//            dimension = "version"
-//            applicationIdSuffix = ".full"
-//        }
-//        create("demo") {
-//            dimension = "version"
-//            applicationIdSuffix = ".demo"
-//        }
-//    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.1.0-rc02"
+    }
+
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-
-    implementation(projects.libraryAndroid)
-    implementation(projects.libraryKotlin)
+    implementation(projects.lib.line)
+    implementation(projects.lib.bar)
+    implementation(projects.lib.pie)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraint.layout)
     implementation(libs.androidx.core.ktx)
+
+    implementation(libs.compose.activity)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.core)
+    implementation(libs.compose.layout)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.tooling)
+    implementation(libs.compose.material)
+    implementation(libs.compose.material.icons)
 
     testImplementation(libs.junit)
 

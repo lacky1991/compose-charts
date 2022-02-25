@@ -1,5 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("com.android.application") apply false
     id("com.android.library") apply false

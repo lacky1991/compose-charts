@@ -23,13 +23,15 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = ("kotlin-android-template")
+rootProject.name = ("compose-charts")
 
 enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
     "app",
-    "library-android",
-    "library-kotlin"
+    ":lib:common",
+    ":lib:bar",
+    ":lib:line",
+    ":lib:pie",
 )

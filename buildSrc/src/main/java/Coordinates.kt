@@ -1,7 +1,7 @@
-const val PUBLISHING_GROUP = "com.ncorti.kotlin.template"
+const val PUBLISHING_GROUP = "de.luckyworks.compose.charts"
 
 object AppCoordinates {
-    const val APP_ID = "de.luckyworks.compose.charts"
+    const val APP_ID = "de.luckyworks.compose.charts.sample"
 
     const val APP_VERSION_NAME = "0.0.1"
     const val APP_VERSION_CODE = 1
