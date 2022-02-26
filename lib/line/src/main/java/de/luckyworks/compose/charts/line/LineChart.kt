@@ -16,6 +16,7 @@ import de.luckyworks.compose.charts.line.LineChartUtils.calculateDrawableArea
 import de.luckyworks.compose.charts.line.LineChartUtils.calculateFillPath
 import de.luckyworks.compose.charts.line.LineChartUtils.calculateLinePath
 import de.luckyworks.compose.charts.line.LineChartUtils.calculatePointLocation
+import de.luckyworks.compose.charts.line.LineChartUtils.calculateSelectedIndex
 import de.luckyworks.compose.charts.line.LineChartUtils.calculateXAxisDrawableArea
 import de.luckyworks.compose.charts.line.LineChartUtils.calculateXAxisLabelsDrawableArea
 import de.luckyworks.compose.charts.line.LineChartUtils.calculateYAxisDrawableArea
@@ -23,7 +24,6 @@ import de.luckyworks.compose.charts.line.LineChartUtils.withProgress
 import de.luckyworks.compose.charts.line.renderer.line.GradientLineShader
 import de.luckyworks.compose.charts.line.renderer.line.LineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.LineShader
-import de.luckyworks.compose.charts.line.renderer.line.NoSelectedLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.PathEffectSelectedLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.SelectedLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineDrawer
@@ -37,7 +37,6 @@ import de.luckyworks.compose.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import de.luckyworks.compose.charts.line.renderer.yaxis.YAxisDrawer
 import de.luckyworks.compose.charts.piechart.animation.simpleChartAnimation
 import de.luckyworks.compose.charts.piechart.utils.onTouch
-import kotlin.math.abs
 
 /**
  * A line chart that animates when loaded.
@@ -129,28 +128,29 @@ fun LineChart(
                 transitionProgress = transitionAnimation.value
             )
         )
-        val pointPositions = lineChartData.points.mapIndexed { index, point ->
-            calculatePointLocation(
-                drawableArea = chartDrawableArea,
+        val selectedIndex = touchEvent.value?.let { touchEvent ->
+            calculateSelectedIndex(
                 lineChartData = lineChartData,
-                point = point,
-                index = index
-            ) to point
-        }
-        val selectedIndex = touchEvent.value?.let { value ->
-            pointPositions.minByOrNull { abs(value.x - it.first.x) }
-        }?.also {
-            onSelection?.invoke(it.second, it.first)
+                chartDrawableArea = chartDrawableArea,
+                touchEvent = touchEvent
+            )?.also {
+                onSelection?.invoke(lineChartData.points[it], touchEvent)
+            }
         }
 
-        pointPositions.forEachIndexed { index, (pointLocation, point) ->
+        lineChartData.points.forEachIndexed { index, point ->
             withProgress(
                 index = index,
                 lineChartData = lineChartData,
                 transitionProgress = transitionAnimation.value
             ) {
-
-                if (point == selectedIndex?.second) {
+                val pointLocation = calculatePointLocation(
+                    drawableArea = chartDrawableArea,
+                    lineChartData = lineChartData,
+                    point = point,
+                    index = index,
+                )
+                if (index == selectedIndex) {
                     selectedLineDrawer.drawLine(
                         drawScope = this,
                         drawableArea = chartDrawableArea,
