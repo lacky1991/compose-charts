@@ -5,117 +5,150 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.luckyworks.compose.charts.line.LineChart
 import com.github.tehras.charts.theme.Margins.horizontal
 import com.github.tehras.charts.theme.Margins.vertical
 import com.github.tehras.charts.theme.Margins.verticalLarge
+import de.luckyworks.compose.charts.line.LineChartData
+import de.luckyworks.compose.charts.line.renderer.line.SolidLineDrawer
+import de.luckyworks.compose.charts.line.renderer.line.SolidLineShader
+import de.luckyworks.compose.charts.line.renderer.xaxis.NoLabelXAxisDrawer
+import de.luckyworks.compose.charts.line.renderer.yaxis.InsideYAxisDrawer
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 import de.luckyworks.compose.charts.sample.ui.line.LineChartDataModel.PointDrawerType
 
 @Composable
 fun LineChartScreen() {
-  Scaffold(
-    topBar = {
-      TopAppBar(
-        navigationIcon = {
-          IconButton(onClick = { ChartScreenStatus.navigateHome() }) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = "Go back to home")
-          }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { ChartScreenStatus.navigateHome() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Go back to home")
+                    }
+                },
+                title = { Text(text = "Line Chart") }
+            )
         },
-        title = { Text(text = "Line Chart") }
-      )
-    },
-  ) { LineChartScreenContent() }
+    ) { LineChartScreenContent() }
 }
 
 @Composable
 fun LineChartScreenContent() {
-  val lineChartDataModel = LineChartDataModel()
+    val lineChartDataModel = remember { LineChartDataModel() }
 
-  Column(
-    modifier = Modifier.padding(
-      horizontal = horizontal,
-      vertical = vertical
-    )
-  ) {
-    LineChartRow(lineChartDataModel)
-    HorizontalOffsetSelector(lineChartDataModel)
-    OffsetProgress(lineChartDataModel)
-  }
+    Column(
+        modifier = Modifier.padding(
+            horizontal = horizontal,
+            vertical = vertical
+        )
+    ) {
+        val selectedLabel = remember { mutableStateOf<LineChartData.Point?>(null) }
+
+        Text(
+            text = selectedLabel.value?.label ?: "",
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .padding(bottom = 16.dp)
+        )
+
+        LineChartRow(lineChartDataModel, selectedLabel)
+        HorizontalOffsetSelector(lineChartDataModel)
+        OffsetProgress(lineChartDataModel)
+    }
 }
 
 @Composable
 fun HorizontalOffsetSelector(lineChartDataModel: LineChartDataModel) {
-  val selectedType = lineChartDataModel.pointDrawerType
-
-  Row(
-    modifier = Modifier.padding(
-      horizontal = horizontal,
-      vertical = verticalLarge
-    ),
-    verticalAlignment = CenterVertically
-  ) {
-    Text("Point Drawer")
+    val selectedType = lineChartDataModel.pointDrawerType
 
     Row(
-      horizontalArrangement = Arrangement.SpaceEvenly,
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = horizontal, vertical = vertical)
-        .align(CenterVertically)
+        modifier = Modifier.padding(
+            horizontal = horizontal,
+            vertical = verticalLarge
+        ),
+        verticalAlignment = CenterVertically
     ) {
-      PointDrawerType.values().forEach { type ->
-        OutlinedButton(
-          border = ButtonDefaults.outlinedBorder.takeIf { selectedType == type },
-          onClick = { lineChartDataModel.pointDrawerType = type }
+        Text("Point Drawer")
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = horizontal, vertical = vertical)
+                .align(CenterVertically)
         ) {
-          Text(type.name)
+            PointDrawerType.values().forEach { type ->
+                OutlinedButton(
+                    border = ButtonDefaults.outlinedBorder.takeIf { selectedType == type },
+                    onClick = { lineChartDataModel.pointDrawerType = type }
+                ) {
+                    Text(type.name)
+                }
+            }
         }
-      }
     }
-  }
 }
 
 @Composable
 fun OffsetProgress(lineChartDataModel: LineChartDataModel) {
-  Row(
-    modifier = Modifier.padding(horizontal = horizontal),
-    verticalAlignment = CenterVertically
-  ) {
-    Text("Offset")
-
     Row(
-      horizontalArrangement = Arrangement.SpaceEvenly,
-      modifier = Modifier
-        .fillMaxWidth()
-        .align(CenterVertically)
+        modifier = Modifier.padding(horizontal = horizontal),
+        verticalAlignment = CenterVertically
     ) {
-      Slider(
-        value = lineChartDataModel.horizontalOffset,
-        onValueChange = { lineChartDataModel.horizontalOffset = it },
-        valueRange = 0f.rangeTo(25f)
-      )
+        Text("Offset")
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(CenterVertically)
+        ) {
+            Slider(
+                value = lineChartDataModel.horizontalOffset,
+                onValueChange = { lineChartDataModel.horizontalOffset = it },
+                valueRange = 0f.rangeTo(0.25f)
+            )
+        }
     }
-  }
 }
 
 @Composable
-fun LineChartRow(lineChartDataModel: LineChartDataModel) {
-  Box(
-    modifier = Modifier
-      .height(250.dp)
-      .fillMaxWidth()
-  ) {
-    LineChart(
-      lineChartData = lineChartDataModel.lineChartData,
-      horizontalOffset = lineChartDataModel.horizontalOffset,
-      pointDrawer = lineChartDataModel.pointDrawer
-    )
-  }
+fun LineChartRow(
+    lineChartDataModel: LineChartDataModel,
+    selectedLabel: MutableState<LineChartData.Point?>
+) {
+    Box(
+        modifier = Modifier
+            .height(250.dp)
+            .fillMaxWidth()
+    ) {
+        LineChart(
+            lineChartData = lineChartDataModel.lineChartData,
+            pointDrawer = lineChartDataModel.pointDrawer,
+            lineShader = SolidLineShader(color = Color(0x20EEEEEE)),
+            lineDrawer = SolidLineDrawer(color = MaterialTheme.colors.primary),
+            xAxisDrawer = NoLabelXAxisDrawer(axisLineColor = Color(0xFFF4E4D4D)),
+            yAxisDrawer = InsideYAxisDrawer(
+                labelTextColor = Color(0xFFF4E4D4D),
+                axisLineColor = Color(0xFFF4E4D4D),
+            ),
+            horizontalOffset = lineChartDataModel.horizontalOffset,
+        ) { point, offset ->
+            selectedLabel.value = point
+        }
+    }
 }
 
 @Preview

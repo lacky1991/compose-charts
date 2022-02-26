@@ -2,7 +2,6 @@ package de.luckyworks.compose.charts.line.renderer.yaxis
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
@@ -15,8 +14,6 @@ import androidx.compose.ui.unit.sp
 import de.luckyworks.compose.charts.piechart.utils.toLegacyInt
 import kotlin.math.max
 import kotlin.math.roundToInt
-
-typealias LabelFormatter = (value: Float) -> String
 
 class SimpleYAxisDrawer(
     private val labelTextSize: TextUnit = 12.sp,
@@ -39,13 +36,12 @@ class SimpleYAxisDrawer(
 
     override fun drawAxisLine(
         drawScope: DrawScope,
-        canvas: Canvas,
         drawableArea: Rect
     ) = with(drawScope) {
         val lineThickness = axisLineThickness.toPx()
         val x = drawableArea.right - (lineThickness / 2f)
 
-        canvas.drawLine(
+        drawScope.drawContext.canvas.drawLine(
             p1 = Offset(
                 x = x,
                 y = drawableArea.top
@@ -62,7 +58,6 @@ class SimpleYAxisDrawer(
 
     override fun drawAxisLabels(
         drawScope: DrawScope,
-        canvas: Canvas,
         drawableArea: Rect,
         minValue: Float,
         maxValue: Float
@@ -79,15 +74,14 @@ class SimpleYAxisDrawer(
             val value = minValue + (i * ((maxValue - minValue) / labelCount))
 
             val label = labelValueFormatter(value)
-            val x =
-                drawableArea.right - axisLineThickness.toPx() - (labelTextSize.toPx() / 2f)
+            val x = drawableArea.right - axisLineThickness.toPx() - (labelTextSize.toPx() / 2f)
 
             labelPaint.getTextBounds(label, 0, label.length, textBounds)
 
             val y =
                 drawableArea.bottom - (i * (totalHeight / labelCount)) + (textBounds.height() / 2f)
 
-            canvas.nativeCanvas.drawText(label, x, y, labelPaint)
+            drawScope.drawContext.canvas.nativeCanvas.drawText(label, x, y, labelPaint)
         }
     }
 }

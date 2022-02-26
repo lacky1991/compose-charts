@@ -27,7 +27,7 @@ class LineChartDataModel {
             )
         )
     )
-    var horizontalOffset by mutableStateOf(5f)
+    var horizontalOffset by mutableStateOf(0f)
     var pointDrawerType by mutableStateOf(Filled)
     val pointDrawer: PointDrawer
         get() {

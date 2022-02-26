@@ -6,29 +6,27 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data class SolidLineDrawer(
-  val thickness: Dp = 3.dp,
-  val color: Color = Color.Cyan
+    val thickness: Dp = 3.dp,
+    val color: Color = Color.Cyan
 ) : LineDrawer {
-  private val paint = Paint().apply {
-    this.color = this@SolidLineDrawer.color
-    this.style = PaintingStyle.Stroke
-    this.isAntiAlias = true
-  }
-
-  override fun drawLine(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    linePath: Path
-  ) {
-    val lineThickness = with(drawScope) {
-      thickness.toPx()
+    private val paint = Paint().apply {
+        this.color = this@SolidLineDrawer.color
+        this.style = PaintingStyle.Stroke
+        this.isAntiAlias = true
     }
 
-    canvas.drawPath(
-      path = linePath,
-      paint = paint.apply {
-        strokeWidth = lineThickness
-      }
-    )
-  }
+    override fun drawLine(
+        drawScope: DrawScope,
+        linePath: Path
+    ) {
+        with(drawScope) {
+            drawContext.canvas.drawPath(
+                path = linePath,
+                paint = paint.apply {
+                    strokeWidth = thickness.toPx()
+                    pathEffect = PathEffect.cornerPathEffect(10.dp.toPx())
+                }
+            )
+        }
+    }
 }

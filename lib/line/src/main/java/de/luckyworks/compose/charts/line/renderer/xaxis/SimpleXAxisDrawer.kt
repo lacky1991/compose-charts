@@ -2,12 +2,8 @@ package de.luckyworks.compose.charts.line.renderer.xaxis
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Canvas
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -15,76 +11,74 @@ import androidx.compose.ui.unit.sp
 import de.luckyworks.compose.charts.piechart.utils.toLegacyInt
 
 class SimpleXAxisDrawer(
-  private val labelTextSize: TextUnit = 12.sp,
-  private val labelTextColor: Color = Color.Black,
-  /** 1 means we draw everything. 2 means we draw every other, and so on. */
-  private val labelRatio: Int = 1,
-  private val axisLineThickness: Dp = 1.dp,
-  private val axisLineColor: Color = Color.Black
+    private val labelTextSize: TextUnit = 12.sp,
+    private val labelTextColor: Color = Color.Black,
+    /** 1 means we draw everything. 2 means we draw every other, and so on. */
+    private val labelRatio: Int = 1,
+    private val axisLineThickness: Dp = 1.dp,
+    private val axisLineColor: Color = Color.Black
 ) : XAxisDrawer {
-  private val axisLinePaint = Paint().apply {
-    isAntiAlias = true
-    color = axisLineColor
-    style = PaintingStyle.Stroke
-  }
-
-  private val textPaint = android.graphics.Paint().apply {
-    isAntiAlias = true
-    color = labelTextColor.toLegacyInt()
-  }
-
-  override fun requiredHeight(drawScope: DrawScope): Float {
-    return with(drawScope) {
-      (3f / 2f) * (labelTextSize.toPx() + axisLineThickness.toPx())
+    private val axisLinePaint = Paint().apply {
+        isAntiAlias = true
+        color = axisLineColor
+        style = PaintingStyle.Stroke
     }
-  }
 
-  override fun drawAxisLine(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    drawableArea: Rect
-  ) {
-    with(drawScope) {
-      val lineThickness = axisLineThickness.toPx()
-      val y = drawableArea.top + (lineThickness / 2f)
+    private val textPaint = android.graphics.Paint().apply {
+        isAntiAlias = true
+        color = labelTextColor.toLegacyInt()
+    }
 
-      canvas.drawLine(
-        p1 = Offset(
-          x = drawableArea.left,
-          y = y
-        ),
-        p2 = Offset(
-          x = drawableArea.right,
-          y = y
-        ),
-        paint = axisLinePaint.apply {
-          strokeWidth = lineThickness
+    override fun requiredHeight(drawScope: DrawScope): Float {
+        return with(drawScope) {
+            (3f / 2f) * (labelTextSize.toPx() + axisLineThickness.toPx())
         }
-      )
     }
-  }
 
-  override fun drawAxisLabels(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    drawableArea: Rect,
-    labels: List<String>
-  ) {
-    with(drawScope) {
-      val labelPaint = textPaint.apply {
-        textSize = labelTextSize.toPx()
-        textAlign = android.graphics.Paint.Align.CENTER
-      }
+    override fun drawAxisLine(
+        drawScope: DrawScope,
+        drawableArea: Rect
+    ) {
+        with(drawScope) {
+            val lineThickness = axisLineThickness.toPx()
+            val y = drawableArea.top + (lineThickness / 2f)
 
-      val labelIncrements = drawableArea.width / (labels.size - 1)
-      labels.forEachIndexed { index, label ->
-        if (index.rem(labelRatio) == 0) {
-          val x = drawableArea.left + (labelIncrements * (index))
-          val y = drawableArea.bottom
-
-          canvas.nativeCanvas.drawText(label, x, y, labelPaint)
+            drawScope.drawContext.canvas.drawLine(
+                p1 = Offset(
+                    x = drawableArea.left,
+                    y = y
+                ),
+                p2 = Offset(
+                    x = drawableArea.right,
+                    y = y
+                ),
+                paint = axisLinePaint.apply {
+                    strokeWidth = lineThickness
+                }
+            )
         }
-      }
     }
-  }
+
+    override fun drawAxisLabels(
+        drawScope: DrawScope,
+        drawableArea: Rect,
+        labels: List<String>
+    ) {
+        with(drawScope) {
+            val labelPaint = textPaint.apply {
+                textSize = labelTextSize.toPx()
+                textAlign = android.graphics.Paint.Align.CENTER
+            }
+
+            val labelIncrements = drawableArea.width / (labels.size - 1)
+            labels.forEachIndexed { index, label ->
+                if (index.rem(labelRatio) == 0) {
+                    val x = drawableArea.left + (labelIncrements * (index))
+                    val y = drawableArea.bottom
+
+                    drawScope.drawContext.canvas.nativeCanvas.drawText(label, x, y, labelPaint)
+                }
+            }
+        }
+    }
 }
