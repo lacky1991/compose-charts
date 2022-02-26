@@ -19,17 +19,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.luckyworks.compose.charts.piechart.renderer.SimpleSliceDrawer
 import com.github.tehras.charts.theme.Margins
 import de.luckyworks.compose.charts.piechart.PieChart
+import de.luckyworks.compose.charts.piechart.PieChartData
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 
 @Composable
@@ -68,18 +71,37 @@ private fun PieChartScreenContent() {
 
 @Composable
 private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-            .padding(vertical = Margins.vertical)
-    ) {
-        PieChart(
-            pieChartData = pieChartDataModel.pieChartData,
-            sliceDrawer = SimpleSliceDrawer(
-                sliceThickness = pieChartDataModel.sliceThickness
-            )
+    Column {
+
+        val selectedLabel = remember { mutableStateOf<PieChartData.Slice?>(null) }
+
+        Text(
+            text = selectedLabel.value?.value?.toString() ?: "",
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .padding(bottom = 16.dp)
         )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .padding(vertical = Margins.vertical)
+        ) {
+            PieChart(
+                pieChartData = pieChartDataModel.pieChartData,
+                sliceDrawer = SimpleSliceDrawer(
+                    sliceThickness = pieChartDataModel.sliceThickness
+                ),
+                keepSelection = true,
+                startSelection = 1,
+                onSelection = { slice ->
+                    selectedLabel.value = slice
+                }
+            )
+        }
     }
 }
 

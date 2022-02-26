@@ -7,9 +7,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
-object LineChartUtils {
+internal object LineChartUtils {
 
     fun calculateDrawableArea(
         xAxisDrawableArea: Rect,
@@ -84,8 +83,6 @@ object LineChartUtils {
             y = drawableArea.height - (y * drawableArea.height)
         )
     }
-
-    fun List<Float>.closestValue(value: Float) = minByOrNull { abs(value - it) }
 
     fun withProgress(
         index: Int,
@@ -201,5 +198,21 @@ object LineChartUtils {
             lineTo(x, drawableArea.bottom)
             lineTo(drawableArea.right, drawableArea.bottom)
         } ?: lineTo(drawableArea.left, drawableArea.bottom)
+    }
+
+    fun calculateSelectedIndex(
+        lineChartData: LineChartData,
+        chartDrawableArea: Rect,
+        touchEvent: Offset,
+    ): Int? {
+        return lineChartData.points.withIndex().minByOrNull { indexedValue ->
+            val position = calculatePointLocation(
+                drawableArea = chartDrawableArea,
+                lineChartData = lineChartData,
+                point = indexedValue.value,
+                index = indexedValue.index
+            )
+            abs(touchEvent.x - position.x)
+        }?.index
     }
 }
