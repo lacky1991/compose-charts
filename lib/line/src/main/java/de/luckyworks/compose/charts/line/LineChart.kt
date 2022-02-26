@@ -54,7 +54,7 @@ fun LineChart(
     xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer(),
     yAxisDrawer: YAxisDrawer = SimpleYAxisDrawer(),
     horizontalOffset: Float = 0.05f,
-    onSelection: ((LineChartData.Point, Offset) -> Unit)? = null
+    onSelection: ((index: Int, point: LineChartData.Point, touchEvent: Offset) -> Unit)? = null
 ) {
     check(horizontalOffset in 0f..0.25f) {
         "Horizontal offset is the % offset from sides, " +
@@ -134,7 +134,7 @@ fun LineChart(
                 chartDrawableArea = chartDrawableArea,
                 touchEvent = touchEvent
             )?.also {
-                onSelection?.invoke(lineChartData.points[it], touchEvent)
+                onSelection?.invoke(it, lineChartData.points[it], touchEvent)
             }
         }
 

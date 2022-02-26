@@ -30,7 +30,7 @@ fun PieChart(
     startAngel: Float = 0f,
     keepSelection: Boolean = false,
     startSelection: Int = -1,
-    onSelection: ((PieChartData.Slice) -> Unit)? = null
+    onSelection: ((index: Int, PieChartData.Slice) -> Unit)? = null
 ) {
     val transitionProgress = remember(pieChartData.slices) { Animatable(initialValue = 0f) }
 
@@ -62,7 +62,7 @@ private fun DrawChart(
     startAngel: Float = 0f,
     keepSelection: Boolean = false,
     startSelection: Int = -1,
-    onSelection: ((PieChartData.Slice) -> Unit)? = null
+    onSelection: ((index: Int, PieChartData.Slice) -> Unit)? = null
 ) {
     val slices = pieChartData.slices
 
@@ -88,7 +88,7 @@ private fun DrawChart(
                 )
             }?.run {
                 selectedIndex.value = this
-                onSelection?.invoke(pieChartData.slices[this])
+                onSelection?.invoke(this, pieChartData.slices[this])
             }
 
             slices.forEachIndexed { index, slice ->
