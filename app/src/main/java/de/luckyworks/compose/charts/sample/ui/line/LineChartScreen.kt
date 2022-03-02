@@ -36,7 +36,7 @@ import de.luckyworks.compose.charts.line.LineChartData
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineShader
 import de.luckyworks.compose.charts.line.renderer.xaxis.NoLabelXAxisDrawer
-import de.luckyworks.compose.charts.line.renderer.yaxis.InsideYAxisDrawer
+import de.luckyworks.compose.charts.line.renderer.yaxis.InsideSmallYAxisDrawer
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 import de.luckyworks.compose.charts.sample.ui.line.LineChartDataModel.PointDrawerType
 
@@ -153,10 +153,10 @@ fun LineChartRow(
             pointDrawer = lineChartDataModel.pointDrawer,
             lineShader = SolidLineShader(color = Color(0x20EEEEEE)),
             lineDrawer = SolidLineDrawer(color = MaterialTheme.colors.primary),
-            xAxisDrawer = NoLabelXAxisDrawer(axisLineColor = Color(0xFFF4E4D4D)),
-            yAxisDrawer = InsideYAxisDrawer(
-                labelTextColor = Color(0xFFF4E4D4D),
-                axisLineColor = Color(0xFFF4E4D4D),
+            xAxisDrawer = NoLabelXAxisDrawer(axisLineColor = Color(0xFF4E4D4D)),
+            yAxisDrawer = InsideSmallYAxisDrawer(
+                labelTextColor = Color(0xFF4E4D4D),
+                axisLineColor = Color(0xFF4E4D4D),
             ),
             horizontalOffset = lineChartDataModel.horizontalOffset,
             onRelease = { selectedLabel.value = null }

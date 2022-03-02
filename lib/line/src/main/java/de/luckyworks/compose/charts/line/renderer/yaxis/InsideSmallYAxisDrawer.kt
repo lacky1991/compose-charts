@@ -102,7 +102,7 @@ class InsideSmallYAxisDrawer(
             val value = minValue + ((labelCount - index) * ((maxValue - minValue) / labelCount))
             val label = labelValueFormatter(value)
             labelPaint.getTextBounds(label, 0, label.length, textBounds)
-            val y = (index * (totalHeight / labelCount)) + (textBounds.height())
+            val y = (index * (totalHeight / labelCount)) + (textBounds.height() / 2)
             drawContext.canvas.nativeCanvas.drawText(
                 label,
                 paddingStart.toPx() + axisLineWidth.toPx() + 30f,
