@@ -4,7 +4,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 
-class SolidLineShader(val color: Color = Color.Blue) : LineShader {
+class SolidLineShader(
+    private val color: Color = Color.Blue
+) : LineShader {
     override fun fillLine(drawScope: DrawScope, fillPath: Path) {
         drawScope.drawPath(
             path = fillPath,

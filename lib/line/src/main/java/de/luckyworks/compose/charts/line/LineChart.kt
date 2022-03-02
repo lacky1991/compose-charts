@@ -53,8 +53,9 @@ fun LineChart(
     lineShader: LineShader = GradientLineShader(),
     xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer(),
     yAxisDrawer: YAxisDrawer = SimpleYAxisDrawer(),
-    horizontalOffset: Float = 0.05f,
-    onSelection: ((index: Int, point: LineChartData.Point, touchEvent: Offset) -> Unit)? = null
+    horizontalOffset: Float = 0.0f,
+    onRelease: (() -> Unit)? = null,
+    onSelection: ((index: Int, point: LineChartData.Point, touchEvent: Offset) -> Unit)? = null,
 ) {
     check(horizontalOffset in 0f..0.25f) {
         "Horizontal offset is the % offset from sides, " +
@@ -75,7 +76,10 @@ fun LineChart(
             .fillMaxSize()
             .onTouch(
                 onTouch = { offset -> touchEvent.value = offset },
-                onRelease = { touchEvent.value = null }
+                onRelease = {
+                    touchEvent.value = null
+                    onRelease?.invoke()
+                }
             )
 
     ) {

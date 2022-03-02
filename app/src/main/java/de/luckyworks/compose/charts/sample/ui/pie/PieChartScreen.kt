@@ -29,10 +29,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.luckyworks.compose.charts.piechart.renderer.SimpleSliceDrawer
 import com.github.tehras.charts.theme.Margins
 import de.luckyworks.compose.charts.piechart.PieChart
 import de.luckyworks.compose.charts.piechart.PieChartData
+import de.luckyworks.compose.charts.piechart.renderer.SimpleSliceDrawer
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 
 @Composable
@@ -96,8 +96,7 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                     sliceThickness = pieChartDataModel.sliceThickness
                 ),
                 keepSelection = true,
-                startSelection = 1,
-                onSelection = { slice ->
+                startSelection = 1, onSelection = { index, slice ->
                     selectedLabel.value = slice
                 }
             )
@@ -168,4 +167,4 @@ private fun AddOrRemoveSliceRow(pieChartDataModel: PieChartDataModel) {
 
 @Preview
 @Composable
-fun PieChartScreenPreview() = PieChartScreen()
+private fun PieChartScreenPreview() = PieChartScreen()

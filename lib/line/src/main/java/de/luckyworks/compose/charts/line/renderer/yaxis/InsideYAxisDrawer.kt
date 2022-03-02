@@ -18,7 +18,8 @@ class InsideYAxisDrawer(
     private val labelRatio: Float = 2.8f,
     private val labelValueFormatter: LabelFormatter = { value -> "%.0f".format(value) },
     private val axisLineThickness: Dp = 1.dp,
-    private val axisLineColor: Color = Color(0xff8B8B8B)
+    private val axisLineColor: Color = Color(0xff8B8B8B),
+    private val linePathEffect: PathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 2f),
 ) : YAxisDrawer {
     private val axisLinePaint = Paint().apply {
         isAntiAlias = true
@@ -32,7 +33,7 @@ class InsideYAxisDrawer(
     private val axisStrokeLinePaint = Paint().apply {
         isAntiAlias = true
         color = axisLineColor
-        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 2f)
+        pathEffect = linePathEffect
     }
     private val textBounds = android.graphics.Rect()
 
@@ -41,15 +42,16 @@ class InsideYAxisDrawer(
         drawableArea: Rect
     ) = with(drawScope) {
         val lineThickness = axisLineThickness.toPx()
+        val x = drawableArea.right - (lineThickness / 2f)
 
-        drawScope.drawContext.canvas.drawLine(
+        drawContext.canvas.drawLine(
             p1 = Offset(
-                x = 0f,
-                y = 0f
+                x = x,
+                y = drawableArea.top
             ),
             p2 = Offset(
-                x = 0f,
-                y = drawScope.size.height
+                x = x,
+                y = drawableArea.bottom
             ),
             paint = axisLinePaint.apply {
                 strokeWidth = lineThickness
@@ -80,7 +82,7 @@ class InsideYAxisDrawer(
 
             val y = (i * (totalHeight / labelCount)) + (textBounds.height() / 2f) - 10f
             if (i != labelCount)
-                drawScope.drawContext.canvas.drawLine(
+                drawContext.canvas.drawLine(
                     p1 = Offset(
                         x = 0f,
                         y = y
@@ -93,7 +95,7 @@ class InsideYAxisDrawer(
                         strokeWidth = lineThickness
                     }
                 )
-            drawScope.drawContext.canvas.nativeCanvas.drawText(
+            drawContext.canvas.nativeCanvas.drawText(
                 label,
                 x,
                 y - 8.dp.toPx(),

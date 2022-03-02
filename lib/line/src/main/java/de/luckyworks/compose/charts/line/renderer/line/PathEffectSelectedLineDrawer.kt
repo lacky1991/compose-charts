@@ -6,14 +6,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import de.luckyworks.compose.charts.line.LineChartData
 
-data class PathEffectSelectedLineDrawer(
-    val color: Color = Color.Cyan,
-    val pathEffect: PathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 10f), 2f),
-    val strokeWidth: Float = Stroke.HairlineWidth,
-    val drawXLine: Boolean = true,
-    val drawYLine: Boolean = true,
+class PathEffectSelectedLineDrawer(
+    private val color: Color = Color.Cyan,
+    private val pathEffect: PathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 10f), 2f),
+    private val strokeWidth: Dp = 3.dp,
+    private val drawXLine: Boolean = true,
+    private val drawYLine: Boolean = true,
 ) : SelectedLineDrawer {
 
     override fun drawLine(
@@ -29,7 +31,7 @@ data class PathEffectSelectedLineDrawer(
                     pathEffect = pathEffect,
                     start = Offset(drawableArea.left, pointLocation.y),
                     end = Offset(drawableArea.right, pointLocation.y),
-                    strokeWidth = strokeWidth,
+                    strokeWidth = strokeWidth.toPx(),
                 )
             }
             if (drawYLine) {
@@ -38,7 +40,7 @@ data class PathEffectSelectedLineDrawer(
                     pathEffect = pathEffect,
                     start = Offset(pointLocation.x, 0f),
                     end = Offset(pointLocation.x, drawableArea.height),
-                    strokeWidth = strokeWidth,
+                    strokeWidth = strokeWidth.toPx(),
                 )
             }
         }

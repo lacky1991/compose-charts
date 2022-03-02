@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class FilledCircularPointDrawer(
-    val diameter: Dp = 8.dp,
-    val color: Color = Color.Blue
+class FilledCircularPointDrawer(
+    private val diameter: Dp = 8.dp,
+    private val color: Color = Color.Blue
 ) : PointDrawer {
 
     private val paint = Paint().apply {

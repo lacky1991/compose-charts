@@ -8,6 +8,8 @@ plugins {
 }
 
 android {
+    namespace = "de.luckyworks.compose.charts.line"
+
     compileSdk = libs.versions.compile.sdk.version.get().toInt()
 
     defaultConfig {
