@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 
 class GradientLineShader(colors: List<Color> = listOf(Color.Blue, Color.Transparent)) : LineShader {
     private val brush = Brush.verticalGradient(colors)
-    override fun fillLine(drawScope: DrawScope, fillPath: Path) {
+    override fun fillLine(drawScope: DrawScope, fillPath: Path, isDragging: Boolean) {
         drawScope.drawPath(
             path = fillPath,
             brush = brush

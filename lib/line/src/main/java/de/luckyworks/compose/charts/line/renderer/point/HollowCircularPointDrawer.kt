@@ -4,7 +4,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -24,7 +23,9 @@ class HollowCircularPointDrawer(
 
     override fun drawPoint(
         drawScope: DrawScope,
-        center: Offset
+        center: Offset,
+        isDragging: Boolean,
+        isSelected: Boolean
     ) {
         with(drawScope as Density) {
             drawScope.drawContext.canvas.drawCircle(

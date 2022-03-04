@@ -24,13 +24,9 @@ import de.luckyworks.compose.charts.line.LineChartUtils.withProgress
 import de.luckyworks.compose.charts.line.renderer.line.GradientLineShader
 import de.luckyworks.compose.charts.line.renderer.line.LineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.LineShader
-import de.luckyworks.compose.charts.line.renderer.line.PathEffectSelectedLineDrawer
-import de.luckyworks.compose.charts.line.renderer.line.SelectedLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineDrawer
 import de.luckyworks.compose.charts.line.renderer.point.FilledCircularPointDrawer
-import de.luckyworks.compose.charts.line.renderer.point.NoSelectedPointDrawer
 import de.luckyworks.compose.charts.line.renderer.point.PointDrawer
-import de.luckyworks.compose.charts.line.renderer.point.SelectedPointDrawer
 import de.luckyworks.compose.charts.line.renderer.xaxis.SimpleXAxisDrawer
 import de.luckyworks.compose.charts.line.renderer.xaxis.XAxisDrawer
 import de.luckyworks.compose.charts.line.renderer.yaxis.SimpleYAxisDrawer
@@ -48,8 +44,6 @@ fun LineChart(
     animation: AnimationSpec<Float> = simpleChartAnimation(),
     pointDrawer: PointDrawer = FilledCircularPointDrawer(),
     lineDrawer: LineDrawer = SolidLineDrawer(),
-    selectedPointDrawer: SelectedPointDrawer = NoSelectedPointDrawer,
-    selectedLineDrawer: SelectedLineDrawer = PathEffectSelectedLineDrawer(),
     lineShader: LineShader = GradientLineShader(),
     xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer(),
     yAxisDrawer: YAxisDrawer = SimpleYAxisDrawer(),
@@ -104,34 +98,6 @@ fun LineChart(
             offset = horizontalOffset
         )
 
-        drawAxis(
-            lineChartData = lineChartData,
-            scope = this,
-            xAxisDrawer = xAxisDrawer,
-            xAxisDrawableArea = xAxisDrawableArea,
-            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
-            yAxisDrawableArea = yAxisDrawableArea,
-            yAxisDrawer = yAxisDrawer
-        )
-
-        // Draw the chart line.
-        lineShader.fillLine(
-            drawScope = this,
-            fillPath = calculateFillPath(
-                drawableArea = chartDrawableArea,
-                lineChartData = lineChartData,
-                transitionProgress = transitionAnimation.value
-            )
-        )
-
-        lineDrawer.drawLine(
-            drawScope = this,
-            linePath = calculateLinePath(
-                drawableArea = chartDrawableArea,
-                lineChartData = lineChartData,
-                transitionProgress = transitionAnimation.value
-            )
-        )
         val selectedIndex = touchEvent.value?.let { touchEvent ->
             calculateSelectedIndex(
                 lineChartData = lineChartData,
@@ -141,6 +107,38 @@ fun LineChart(
                 onSelection?.invoke(it, lineChartData.points[it], touchEvent)
             }
         }
+
+        drawAxis(
+            lineChartData = lineChartData,
+            scope = this,
+            xAxisDrawer = xAxisDrawer,
+            xAxisDrawableArea = xAxisDrawableArea,
+            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
+            yAxisDrawableArea = yAxisDrawableArea,
+            yAxisDrawer = yAxisDrawer,
+            isDragging = selectedIndex != null,
+        )
+
+        // Draw the chart line.
+        lineShader.fillLine(
+            drawScope = this,
+            fillPath = calculateFillPath(
+                drawableArea = chartDrawableArea,
+                lineChartData = lineChartData,
+                transitionProgress = transitionAnimation.value
+            ),
+            isDragging = selectedIndex != null,
+        )
+
+        lineDrawer.drawLine(
+            drawScope = this,
+            linePath = calculateLinePath(
+                drawableArea = chartDrawableArea,
+                lineChartData = lineChartData,
+                transitionProgress = transitionAnimation.value
+            ),
+            isDragging = selectedIndex != null,
+        )
 
         lineChartData.points.forEachIndexed { index, point ->
             withProgress(
@@ -154,23 +152,18 @@ fun LineChart(
                     point = point,
                     index = index,
                 )
+                pointDrawer.drawPoint(
+                    drawScope = this,
+                    center = pointLocation,
+                    isDragging = selectedIndex != null,
+                    isSelected = selectedIndex == index,
+                )
                 if (index == selectedIndex) {
-                    selectedLineDrawer.drawLine(
+                    lineDrawer.drawSelectedLine(
                         drawScope = this,
                         drawableArea = chartDrawableArea,
                         point = point,
                         pointLocation = pointLocation,
-                    )
-                    selectedPointDrawer.drawPoint(
-                        drawScope = this,
-                        center = pointLocation,
-                        point = point,
-                        pointLocation = pointLocation,
-                    )
-                } else {
-                    pointDrawer.drawPoint(
-                        drawScope = this,
-                        center = pointLocation
                     )
                 }
             }
@@ -186,6 +179,7 @@ private fun drawAxis(
     yAxisDrawableArea: Rect,
     xAxisLabelsDrawableArea: Rect,
     yAxisDrawer: YAxisDrawer,
+    isDragging: Boolean,
 ) {
 
     // Draw the X Axis line.

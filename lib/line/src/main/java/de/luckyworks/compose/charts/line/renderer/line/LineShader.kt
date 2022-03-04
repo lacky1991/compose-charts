@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 interface LineShader {
     fun fillLine(
         drawScope: DrawScope,
-        fillPath: Path
+        fillPath: Path,
+        isDragging: Boolean
     )
 }

@@ -96,7 +96,8 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                     sliceThickness = pieChartDataModel.sliceThickness
                 ),
                 keepSelection = true,
-                startSelection = 1, onSelection = { index, slice ->
+                startSelection = 1,
+                onSelection = { index, slice ->
                     selectedLabel.value = slice
                 }
             )

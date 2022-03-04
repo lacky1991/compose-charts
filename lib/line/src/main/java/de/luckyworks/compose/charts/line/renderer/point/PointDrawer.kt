@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 interface PointDrawer {
     fun drawPoint(
         drawScope: DrawScope,
-        center: Offset
+        center: Offset,
+        isDragging: Boolean,
+        isSelected: Boolean
     )
 }

@@ -26,7 +26,6 @@ fun PieChart(
     modifier: Modifier = Modifier,
     animation: AnimationSpec<Float> = simpleChartAnimation(),
     sliceDrawer: SliceDrawer = SimpleSliceDrawer(),
-    selectedSliceDrawer: SliceDrawer = SimpleSliceDrawer(30f),
     startAngel: Float = 0f,
     keepSelection: Boolean = false,
     startSelection: Int = -1,
@@ -45,7 +44,6 @@ fun PieChart(
         modifier = modifier.fillMaxSize(),
         progress = transitionProgress.value,
         sliceDrawer = sliceDrawer,
-        selectedSliceDrawer = selectedSliceDrawer,
         startAngel = startAngel,
         keepSelection = keepSelection,
         startSelection = startSelection,
@@ -60,7 +58,6 @@ private fun DrawChart(
     modifier: Modifier,
     progress: Float,
     sliceDrawer: SliceDrawer,
-    selectedSliceDrawer: SliceDrawer,
     startAngel: Float = 0f,
     keepSelection: Boolean = false,
     startSelection: Int = -1,
@@ -83,7 +80,6 @@ private fun DrawChart(
     ) {
         drawIntoCanvas {
             var startArc = startAngel
-
             touchEvent.value?.let { touchEvent ->
                 calculateSelectedIndex(
                     pieChartData = pieChartData,
@@ -92,9 +88,9 @@ private fun DrawChart(
                     size = size,
                     progress = progress,
                 )
-            }?.run {
-                selectedIndex.value = this
-                onSelection?.invoke(this, pieChartData.slices[this])
+            }?.also { index ->
+                onSelection?.invoke(index, pieChartData.slices[index])
+                selectedIndex.value = index
             }
 
             slices.forEachIndexed { index, slice ->
@@ -103,25 +99,17 @@ private fun DrawChart(
                     totalLength = pieChartData.totalSize,
                     progress = progress
                 )
-                if (index == selectedIndex.value) {
-                    selectedSliceDrawer.drawSlice(
-                        drawScope = this,
-                        canvas = drawContext.canvas,
-                        area = size,
-                        startAngle = startArc,
-                        sweepAngle = arc,
-                        slice = slice
-                    )
-                } else {
-                    sliceDrawer.drawSlice(
-                        drawScope = this,
-                        canvas = drawContext.canvas,
-                        area = size,
-                        startAngle = startArc,
-                        sweepAngle = arc,
-                        slice = slice
-                    )
-                }
+
+                sliceDrawer.drawSlice(
+                    drawScope = this,
+                    canvas = drawContext.canvas,
+                    area = size,
+                    startAngle = startArc,
+                    sweepAngle = arc,
+                    slice = slice,
+                    isSelected = index == selectedIndex.value,
+                    isDragging = selectedIndex.value != -1
+                )
                 startArc += arc
             }
         }

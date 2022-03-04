@@ -9,7 +9,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import de.luckyworks.compose.charts.piechart.PieChartData.Slice
 
 class SimpleSliceDrawer(
-    private val sliceThickness: Float = 25f
+    private val sliceThickness: Float = 25f,
+    private val selectedSliceThickness: Float = 40f,
 ) : SliceDrawer {
     init {
         require(sliceThickness in 10f..100f) {
@@ -28,32 +29,35 @@ class SimpleSliceDrawer(
         area: Size,
         startAngle: Float,
         sweepAngle: Float,
-        slice: Slice
+        slice: Slice,
+        isSelected: Boolean,
+        isDragging: Boolean
     ) {
-        val sliceThickness = calculateSectorThickness(area = area)
-        val drawableArea = calculateDrawableArea(area = area)
+        val sliceThickness = calculateSectorThickness(sliceThickness = sliceThickness, area = area)
+        val selectedSliceThickness =
+            calculateSectorThickness(sliceThickness = selectedSliceThickness, area = area)
+        val drawableArea = calculateDrawableArea(sliceThickness = sliceThickness, area = area)
+
 
         canvas.drawArc(
-            rect = drawableArea,
-            paint = sectionPaint.apply {
+            rect = drawableArea, paint = sectionPaint.apply {
                 color = slice.color
-                strokeWidth = sliceThickness
-            },
-            startAngle = startAngle,
+                strokeWidth = if (isSelected) selectedSliceThickness else sliceThickness
+            }, startAngle = startAngle,
             sweepAngle = sweepAngle,
             useCenter = false
         )
     }
 
-    private fun calculateSectorThickness(area: Size): Float {
+    private fun calculateSectorThickness(sliceThickness: Float, area: Size): Float {
         val minSize = minOf(area.width, area.height)
 
         return minSize * (sliceThickness / 200f)
     }
 
-    private fun calculateDrawableArea(area: Size): Rect {
+    private fun calculateDrawableArea(sliceThickness: Float, area: Size): Rect {
         val sliceThicknessOffset =
-            calculateSectorThickness(area = area) / 2f
+            calculateSectorThickness(sliceThickness = sliceThickness, area = area) / 2f
         val offsetHorizontally = (area.width - area.height) / 2f
 
         return Rect(
