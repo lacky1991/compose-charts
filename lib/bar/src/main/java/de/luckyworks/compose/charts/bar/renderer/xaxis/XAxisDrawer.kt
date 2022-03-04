@@ -8,8 +8,9 @@ interface XAxisDrawer {
   fun requiredHeight(drawScope: DrawScope): Float
 
   fun drawAxisLine(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    drawableArea: Rect
+      drawScope: DrawScope,
+      canvas: Canvas,
+      drawableArea: Rect,
+      isDragging: Boolean
   )
 }
