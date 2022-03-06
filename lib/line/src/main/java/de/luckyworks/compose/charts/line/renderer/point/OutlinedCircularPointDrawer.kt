@@ -6,21 +6,19 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import de.luckyworks.compose.charts.line.LineChartData
 
-class OutlinedCircularPointDrawer(
+class SelectedOutlinedCircularPointDrawer(
     private val radius: Dp = 4.dp,
     private val color: Color = Color.Blue,
     private val innerColor: Color = Color.Blue,
-) : SelectedPointDrawer {
-
+) : PointDrawer {
     override fun drawPoint(
         drawScope: DrawScope,
         center: Offset,
-        point: LineChartData.Point,
-        pointLocation: Offset
-    ) {
-        with(drawScope) {
+        isDragging: Boolean,
+        isSelected: Boolean
+    ) = with(drawScope) {
+        if (isSelected) {
             drawCircle(
                 color = innerColor,
                 radius = radius.toPx(),
@@ -33,5 +31,6 @@ class OutlinedCircularPointDrawer(
                 center = center,
             )
         }
+
     }
 }
