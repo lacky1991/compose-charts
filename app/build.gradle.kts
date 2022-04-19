@@ -4,7 +4,8 @@ plugins {
 }
 
 android {
-    compileSdkVersion(libs.versions.compile.sdk.version.get().toInt())
+    namespace = "de.luckyworks.compose.charts.sample"
+
 
     defaultConfig {
         minSdkVersion(libs.versions.min.sdk.version.get().toInt())
