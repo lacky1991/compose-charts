@@ -1,5 +1,6 @@
 package de.luckyworks.compose.charts.sample.ui.pie
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -83,12 +85,22 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                 .padding(bottom = 16.dp)
         )
         val selectedIndex = remember { mutableStateOf(-1) }
+        val touchEvent = remember { mutableStateOf<Offset?>(null) }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(250.dp)
                 .padding(vertical = Margins.vertical)
         ) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .clickable {
+                    selectedLabel.value = null
+                    selectedIndex.value = -1
+                    touchEvent.value = null
+                })
             PieChart(
                 modifier = Modifier
                     .size(200.dp)
@@ -102,7 +114,10 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                 onSelection = { index, slice ->
                     selectedLabel.value = slice
                     selectedIndex.value = index
-                })
+                },
+                onChangeTouchPoint = { touchEvent.value = it },
+                touchEvent = touchEvent.value
+            )
         }
     }
 }

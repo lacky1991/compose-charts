@@ -6,7 +6,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -29,6 +28,8 @@ fun PieChart(
     startAngel: Float = 0f,
     selectedIndex: Int = -1,
     onSelection: ((index: Int, PieChartData.Slice) -> Unit)? = null,
+    touchEvent: Offset? = null,
+    onChangeTouchPoint: ((Offset) -> Unit)? = null,
 ) {
     val transitionProgress = remember(pieChartData.slices) { Animatable(initialValue = 0f) }
 
@@ -45,6 +46,8 @@ fun PieChart(
         startAngel = startAngel,
         selectedIndex = selectedIndex,
         onSelection = onSelection,
+        touchEvent = touchEvent,
+        onChangeTouchPoint = onChangeTouchPoint,
     )
 }
 
@@ -56,22 +59,22 @@ private fun DrawChart(
     sliceDrawer: SliceDrawer,
     startAngel: Float = 0f,
     selectedIndex: Int = -1,
-    onSelection: ((index: Int, PieChartData.Slice) -> Unit)? = null
+    onSelection: ((index: Int, PieChartData.Slice) -> Unit)? = null,
+    touchEvent: Offset? = null,
+    onChangeTouchPoint: ((Offset) -> Unit)? = null
 ) {
     val slices = pieChartData.slices
-
-    val touchEvent = remember { mutableStateOf<Offset?>(null) }
 
     Canvas(modifier = modifier
         .pointerInput(Unit) {
             detectTapGestures(onPress = { offset ->
-                touchEvent.value = offset
+                onChangeTouchPoint?.invoke(offset)
             })
         }
     ) {
         drawIntoCanvas {
             var startArc = startAngel
-            touchEvent.value?.let { touchEvent ->
+            touchEvent?.let { touchEvent ->
                 calculateSelectedIndex(
                     pieChartData = pieChartData,
                     touchEvent = touchEvent,
