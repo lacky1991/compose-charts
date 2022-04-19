@@ -4,7 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +39,7 @@ fun PieChart(
 
     DrawChart(
         pieChartData = pieChartData,
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         progress = transitionProgress.value,
         sliceDrawer = sliceDrawer,
         startAngel = startAngel,
