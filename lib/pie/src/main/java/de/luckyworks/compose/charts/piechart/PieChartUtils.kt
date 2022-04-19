@@ -29,7 +29,6 @@ internal object PieChartUtils {
             )
             angelSum += angel
             val angelTouchEvent = calculateAngel(touchEvent, size)
-
             (angelTouchEvent - startAngel + 360.0) % 360.0 < angelSum
         }
     }

@@ -39,14 +39,11 @@ import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 fun PieChartScreen() {
     Scaffold(
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { ChartScreenStatus.navigateHome() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Go back to home")
-                    }
-                },
-                title = { Text(text = "Pie Chart") }
-            )
+            TopAppBar(navigationIcon = {
+                IconButton(onClick = { ChartScreenStatus.navigateHome() }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Go back to home")
+                }
+            }, title = { Text(text = "Pie Chart") })
         },
     ) { PieChartScreenContent() }
 }
@@ -57,8 +54,7 @@ private fun PieChartScreenContent() {
 
     Column(
         modifier = Modifier.padding(
-            horizontal = Margins.horizontal,
-            vertical = Margins.vertical
+            horizontal = Margins.horizontal, vertical = Margins.vertical
         )
     ) {
         PieChartRow(pieChartDataModel)
@@ -83,24 +79,20 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                 .padding(vertical = 8.dp)
                 .padding(bottom = 16.dp)
         )
-
+        val selectedIndex = remember { mutableStateOf(-1) }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(200.dp)
                 .padding(vertical = Margins.vertical)
         ) {
-            PieChart(
-                pieChartData = pieChartDataModel.pieChartData,
-                sliceDrawer = SimpleSliceDrawer(
-                    sliceThickness = pieChartDataModel.sliceThickness
-                ),
-                keepSelection = true,
-                startSelection = 1,
-                onSelection = { index, slice ->
-                    selectedLabel.value = slice
-                }
-            )
+            PieChart(pieChartData = pieChartDataModel.pieChartData, sliceDrawer = SimpleSliceDrawer(
+                sliceThickness = pieChartDataModel.sliceThickness.dp,
+                selectedSliceThickness = pieChartDataModel.sliceThickness.dp + 5.dp
+            ), selectedIndex = selectedIndex.value, onSelection = { index, slice ->
+                selectedLabel.value = slice
+                selectedIndex.value = index
+            })
         }
     }
 }
@@ -122,7 +114,7 @@ private fun SliceThicknessRow(sliceThickness: Float, onValueUpdated: (Float) -> 
         Slider(
             value = sliceThickness,
             onValueChange = { onValueUpdated(it) },
-            valueRange = 10f.rangeTo(100f)
+            valueRange = 1f.rangeTo(20f)
         )
     }
 }
@@ -149,10 +141,8 @@ private fun AddOrRemoveSliceRow(pieChartDataModel: PieChartDataModel) {
         ) {
             Text(text = "Slices: ")
             Text(
-                text = pieChartDataModel.slices.count().toString(),
-                style = TextStyle(
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 18.sp
+                text = pieChartDataModel.slices.count().toString(), style = TextStyle(
+                    fontWeight = FontWeight.ExtraBold, fontSize = 18.sp
                 )
             )
         }

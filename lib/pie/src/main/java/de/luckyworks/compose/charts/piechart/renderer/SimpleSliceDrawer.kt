@@ -39,12 +39,13 @@ class SimpleSliceDrawer(
                 )
             val drawableArea = calculateDrawableArea(sliceThickness = sliceThickness, area = area)
 
-
             canvas.drawArc(
-                rect = drawableArea, paint = sectionPaint.apply {
+                rect = drawableArea,
+                paint = sectionPaint.apply {
                     color = slice.color
                     strokeWidth = if (isSelected) selectedSliceThickness else sliceThickness
-                }, startAngle = startAngle,
+                },
+                startAngle = startAngle,
                 sweepAngle = sweepAngle,
                 useCenter = false
             )
