@@ -115,8 +115,7 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                     selectedLabel.value = slice
                     selectedIndex.value = index
                 },
-                onChangeTouchPoint = { touchEvent.value = it },
-                touchEvent = touchEvent.value
+                touchEvent = touchEvent
             )
         }
     }
