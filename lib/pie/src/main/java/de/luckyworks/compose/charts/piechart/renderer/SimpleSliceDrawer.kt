@@ -6,18 +6,14 @@ import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import de.luckyworks.compose.charts.piechart.PieChartData.Slice
 
 class SimpleSliceDrawer(
-    private val sliceThickness: Float = 25f,
-    private val selectedSliceThickness: Float = 40f,
+    private val sliceThickness: Dp = 20.dp,
+    private val selectedSliceThickness: Dp = 30.dp,
 ) : SliceDrawer {
-    init {
-        require(sliceThickness in 10f..100f) {
-            "Thickness of $sliceThickness must be between 10-100"
-        }
-    }
-
     private val sectionPaint = Paint().apply {
         isAntiAlias = true
         style = PaintingStyle.Stroke
@@ -33,20 +29,26 @@ class SimpleSliceDrawer(
         isSelected: Boolean,
         isDragging: Boolean
     ) {
-        val sliceThickness = calculateSectorThickness(sliceThickness = sliceThickness, area = area)
-        val selectedSliceThickness =
-            calculateSectorThickness(sliceThickness = selectedSliceThickness, area = area)
-        val drawableArea = calculateDrawableArea(sliceThickness = sliceThickness, area = area)
+        with(drawScope) {
+            val sliceThickness =
+                calculateSectorThickness(sliceThickness = sliceThickness.toPx(), area = area)
+            val selectedSliceThickness =
+                calculateSectorThickness(
+                    sliceThickness = selectedSliceThickness.toPx(),
+                    area = area
+                )
+            val drawableArea = calculateDrawableArea(sliceThickness = sliceThickness, area = area)
 
 
-        canvas.drawArc(
-            rect = drawableArea, paint = sectionPaint.apply {
-                color = slice.color
-                strokeWidth = if (isSelected) selectedSliceThickness else sliceThickness
-            }, startAngle = startAngle,
-            sweepAngle = sweepAngle,
-            useCenter = false
-        )
+            canvas.drawArc(
+                rect = drawableArea, paint = sectionPaint.apply {
+                    color = slice.color
+                    strokeWidth = if (isSelected) selectedSliceThickness else sliceThickness
+                }, startAngle = startAngle,
+                sweepAngle = sweepAngle,
+                useCenter = false
+            )
+        }
     }
 
     private fun calculateSectorThickness(sliceThickness: Float, area: Size): Float {
