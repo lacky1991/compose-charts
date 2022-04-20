@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.dp
 import de.luckyworks.compose.charts.piechart.PieChartData.Slice
 
 class SimpleSliceDrawer(
-    private val sliceThickness: Dp = 20.dp,
-    private val selectedSliceThickness: Dp = 30.dp,
+    private val sliceThickness: Dp = 4.dp,
+    private val selectedSliceThickness: Dp = 6.dp,
 ) : SliceDrawer {
     private val sectionPaint = Paint().apply {
         isAntiAlias = true
