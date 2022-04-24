@@ -108,6 +108,35 @@ fun LineChart(
             }
         }
 
+        lineChartData.points.forEachIndexed { index, point ->
+            withProgress(
+                index = index,
+                lineChartData = lineChartData,
+                transitionProgress = transitionAnimation.value
+            ) {
+                val pointLocation = calculatePointLocation(
+                    drawableArea = chartDrawableArea,
+                    lineChartData = lineChartData,
+                    point = point,
+                    index = index,
+                )
+                pointDrawer.drawPoint(
+                    drawScope = this,
+                    center = pointLocation,
+                    isDragging = selectedIndex != null,
+                    isSelected = selectedIndex == index,
+                )
+                if (index == selectedIndex) {
+                    lineDrawer.drawSelectedLine(
+                        drawScope = this,
+                        drawableArea = chartDrawableArea,
+                        point = point,
+                        pointLocation = pointLocation,
+                    )
+                }
+            }
+        }
+
         drawAxis(
             lineChartData = lineChartData,
             scope = this,
@@ -139,35 +168,6 @@ fun LineChart(
             ),
             isDragging = selectedIndex != null,
         )
-
-        lineChartData.points.forEachIndexed { index, point ->
-            withProgress(
-                index = index,
-                lineChartData = lineChartData,
-                transitionProgress = transitionAnimation.value
-            ) {
-                val pointLocation = calculatePointLocation(
-                    drawableArea = chartDrawableArea,
-                    lineChartData = lineChartData,
-                    point = point,
-                    index = index,
-                )
-                pointDrawer.drawPoint(
-                    drawScope = this,
-                    center = pointLocation,
-                    isDragging = selectedIndex != null,
-                    isSelected = selectedIndex == index,
-                )
-                if (index == selectedIndex) {
-                    lineDrawer.drawSelectedLine(
-                        drawScope = this,
-                        drawableArea = chartDrawableArea,
-                        point = point,
-                        pointLocation = pointLocation,
-                    )
-                }
-            }
-        }
     }
 }
 
