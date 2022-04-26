@@ -4,11 +4,11 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import com.github.tehras.charts.theme.ChartsTheme
+import de.luckyworks.compose.charts.sample.theme.ChartsTheme
+import de.luckyworks.compose.charts.sample.ui.bar.BarChartScreen
 import de.luckyworks.compose.charts.sample.ui.line.LineChartScreen
 import de.luckyworks.compose.charts.sample.ui.pie.PieChartScreen
 import de.luckyworks.compose.charts.sample.ui.selector.SelectChartScreen
-import de.luckyworks.compose.charts.sample.ui.bar.BarChartScreen
 
 @Composable
 fun ChartsApp() {
