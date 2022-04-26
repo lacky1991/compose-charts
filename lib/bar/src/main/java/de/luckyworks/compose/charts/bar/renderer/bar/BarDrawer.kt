@@ -6,10 +6,12 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import de.luckyworks.compose.charts.bar.BarChartData
 
 interface BarDrawer {
-  fun drawBar(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    barArea: Rect,
-    bar: BarChartData.Bar
-  )
+    fun drawBar(
+        drawScope: DrawScope,
+        canvas: Canvas,
+        barArea: Rect,
+        bar: BarChartData.Bar,
+        isSelected: Boolean,
+        isDragging: Boolean,
+    )
 }

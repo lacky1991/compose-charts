@@ -7,11 +7,13 @@ import de.luckyworks.compose.charts.piechart.PieChartData.Slice
 
 interface SliceDrawer {
   fun drawSlice(
-    drawScope: DrawScope,
-    canvas: Canvas,
-    area: Size,
-    startAngle: Float,
-    sweepAngle: Float,
-    slice: Slice
+      drawScope: DrawScope,
+      canvas: Canvas,
+      area: Size,
+      startAngle: Float,
+      sweepAngle: Float,
+      slice: Slice,
+      isSelected: Boolean,
+      isDragging: Boolean
   )
 }

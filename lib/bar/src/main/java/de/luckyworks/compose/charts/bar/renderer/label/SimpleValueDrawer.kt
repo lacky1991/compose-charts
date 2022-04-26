@@ -40,7 +40,9 @@ class SimpleValueDrawer(
     canvas: Canvas,
     label: String,
     barArea: Rect,
-    xAxisArea: Rect
+    xAxisArea: Rect,
+    isSelected: Boolean,
+    isDragging: Boolean
   ) = with(drawScope) {
     val xCenter = barArea.left + (barArea.width / 2)
 

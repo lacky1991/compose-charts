@@ -23,7 +23,7 @@ class PieChartDataModel {
     Color(0XFF607D8B)
   )
 
-  var sliceThickness by mutableStateOf(25f)
+  var sliceThickness by mutableStateOf(2f)
   var pieChartData by mutableStateOf(
     PieChartData(
       slices = listOf(

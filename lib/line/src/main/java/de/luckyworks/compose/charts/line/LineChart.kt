@@ -24,13 +24,9 @@ import de.luckyworks.compose.charts.line.LineChartUtils.withProgress
 import de.luckyworks.compose.charts.line.renderer.line.GradientLineShader
 import de.luckyworks.compose.charts.line.renderer.line.LineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.LineShader
-import de.luckyworks.compose.charts.line.renderer.line.PathEffectSelectedLineDrawer
-import de.luckyworks.compose.charts.line.renderer.line.SelectedLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineDrawer
 import de.luckyworks.compose.charts.line.renderer.point.FilledCircularPointDrawer
-import de.luckyworks.compose.charts.line.renderer.point.NoSelectedPointDrawer
 import de.luckyworks.compose.charts.line.renderer.point.PointDrawer
-import de.luckyworks.compose.charts.line.renderer.point.SelectedPointDrawer
 import de.luckyworks.compose.charts.line.renderer.xaxis.SimpleXAxisDrawer
 import de.luckyworks.compose.charts.line.renderer.xaxis.XAxisDrawer
 import de.luckyworks.compose.charts.line.renderer.yaxis.SimpleYAxisDrawer
@@ -48,13 +44,12 @@ fun LineChart(
     animation: AnimationSpec<Float> = simpleChartAnimation(),
     pointDrawer: PointDrawer = FilledCircularPointDrawer(),
     lineDrawer: LineDrawer = SolidLineDrawer(),
-    selectedPointDrawer: SelectedPointDrawer = NoSelectedPointDrawer,
-    selectedLineDrawer: SelectedLineDrawer = PathEffectSelectedLineDrawer(),
     lineShader: LineShader = GradientLineShader(),
     xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer(),
     yAxisDrawer: YAxisDrawer = SimpleYAxisDrawer(),
-    horizontalOffset: Float = 0.05f,
-    onSelection: ((LineChartData.Point, Offset) -> Unit)? = null
+    horizontalOffset: Float = 0.0f,
+    onRelease: (() -> Unit)? = null,
+    onSelection: ((index: Int, point: LineChartData.Point, touchEvent: Offset) -> Unit)? = null,
 ) {
     check(horizontalOffset in 0f..0.25f) {
         "Horizontal offset is the % offset from sides, " +
@@ -75,7 +70,10 @@ fun LineChart(
             .fillMaxSize()
             .onTouch(
                 onTouch = { offset -> touchEvent.value = offset },
-                onRelease = { touchEvent.value = null }
+                onRelease = {
+                    touchEvent.value = null
+                    onRelease?.invoke()
+                }
             )
 
     ) {
@@ -100,41 +98,13 @@ fun LineChart(
             offset = horizontalOffset
         )
 
-        drawAxis(
-            lineChartData = lineChartData,
-            scope = this,
-            xAxisDrawer = xAxisDrawer,
-            xAxisDrawableArea = xAxisDrawableArea,
-            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
-            yAxisDrawableArea = yAxisDrawableArea,
-            yAxisDrawer = yAxisDrawer
-        )
-
-        // Draw the chart line.
-        lineShader.fillLine(
-            drawScope = this,
-            fillPath = calculateFillPath(
-                drawableArea = chartDrawableArea,
-                lineChartData = lineChartData,
-                transitionProgress = transitionAnimation.value
-            )
-        )
-
-        lineDrawer.drawLine(
-            drawScope = this,
-            linePath = calculateLinePath(
-                drawableArea = chartDrawableArea,
-                lineChartData = lineChartData,
-                transitionProgress = transitionAnimation.value
-            )
-        )
         val selectedIndex = touchEvent.value?.let { touchEvent ->
             calculateSelectedIndex(
                 lineChartData = lineChartData,
                 chartDrawableArea = chartDrawableArea,
                 touchEvent = touchEvent
             )?.also {
-                onSelection?.invoke(lineChartData.points[it], touchEvent)
+                onSelection?.invoke(it, lineChartData.points[it], touchEvent)
             }
         }
 
@@ -150,27 +120,54 @@ fun LineChart(
                     point = point,
                     index = index,
                 )
+                pointDrawer.drawPoint(
+                    drawScope = this,
+                    center = pointLocation,
+                    isDragging = selectedIndex != null,
+                    isSelected = selectedIndex == index,
+                )
                 if (index == selectedIndex) {
-                    selectedLineDrawer.drawLine(
+                    lineDrawer.drawSelectedLine(
                         drawScope = this,
                         drawableArea = chartDrawableArea,
                         point = point,
                         pointLocation = pointLocation,
                     )
-                    selectedPointDrawer.drawPoint(
-                        drawScope = this,
-                        center = pointLocation,
-                        point = point,
-                        pointLocation = pointLocation,
-                    )
-                } else {
-                    pointDrawer.drawPoint(
-                        drawScope = this,
-                        center = pointLocation
-                    )
                 }
             }
         }
+
+        drawAxis(
+            lineChartData = lineChartData,
+            scope = this,
+            xAxisDrawer = xAxisDrawer,
+            xAxisDrawableArea = xAxisDrawableArea,
+            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
+            yAxisDrawableArea = yAxisDrawableArea,
+            yAxisDrawer = yAxisDrawer,
+            isDragging = selectedIndex != null,
+        )
+
+        // Draw the chart line.
+        lineShader.fillLine(
+            drawScope = this,
+            fillPath = calculateFillPath(
+                drawableArea = chartDrawableArea,
+                lineChartData = lineChartData,
+                transitionProgress = transitionAnimation.value
+            ),
+            isDragging = selectedIndex != null,
+        )
+
+        lineDrawer.drawLine(
+            drawScope = this,
+            linePath = calculateLinePath(
+                drawableArea = chartDrawableArea,
+                lineChartData = lineChartData,
+                transitionProgress = transitionAnimation.value
+            ),
+            isDragging = selectedIndex != null,
+        )
     }
 }
 
@@ -182,6 +179,7 @@ private fun drawAxis(
     yAxisDrawableArea: Rect,
     xAxisLabelsDrawableArea: Rect,
     yAxisDrawer: YAxisDrawer,
+    isDragging: Boolean,
 ) {
 
     // Draw the X Axis line.

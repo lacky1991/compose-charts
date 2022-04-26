@@ -4,11 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(libs.versions.compile.sdk.version.get().toInt())
+    namespace = "de.luckyworks.compose.charts.sample"
+
+    compileSdk = libs.versions.compile.sdk.version.get().toInt()
 
     defaultConfig {
-        minSdkVersion(libs.versions.min.sdk.version.get().toInt())
-        targetSdkVersion(libs.versions.target.sdk.version.get().toInt())
+        minSdk = libs.versions.min.sdk.version.get().toInt()
+        targetSdk = libs.versions.target.sdk.version.get().toInt()
 
         applicationId = AppCoordinates.APP_ID
         versionCode = AppCoordinates.APP_VERSION_CODE
@@ -35,10 +37,10 @@ android {
         }
     }
 
-  /*  lint {
-        isWarningsAsErrors = true
-        isAbortOnError = true
-    }*/
+    /*  lint {
+          isWarningsAsErrors = true
+          isAbortOnError = true
+      }*/
 
     buildFeatures {
         compose = true

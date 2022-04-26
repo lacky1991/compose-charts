@@ -1,11 +1,14 @@
 package de.luckyworks.compose.charts.sample.ui.pie
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
@@ -22,31 +25,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.luckyworks.compose.charts.piechart.renderer.SimpleSliceDrawer
 import com.github.tehras.charts.theme.Margins
 import de.luckyworks.compose.charts.piechart.PieChart
 import de.luckyworks.compose.charts.piechart.PieChartData
+import de.luckyworks.compose.charts.piechart.renderer.SimpleSliceDrawer
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 
 @Composable
 fun PieChartScreen() {
     Scaffold(
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { ChartScreenStatus.navigateHome() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Go back to home")
-                    }
-                },
-                title = { Text(text = "Pie Chart") }
-            )
+            TopAppBar(navigationIcon = {
+                IconButton(onClick = { ChartScreenStatus.navigateHome() }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Go back to home")
+                }
+            }, title = { Text(text = "Pie Chart") })
         },
     ) { PieChartScreenContent() }
 }
@@ -57,8 +59,7 @@ private fun PieChartScreenContent() {
 
     Column(
         modifier = Modifier.padding(
-            horizontal = Margins.horizontal,
-            vertical = Margins.vertical
+            horizontal = Margins.horizontal, vertical = Margins.vertical
         )
     ) {
         PieChartRow(pieChartDataModel)
@@ -83,23 +84,38 @@ private fun PieChartRow(pieChartDataModel: PieChartDataModel) {
                 .padding(vertical = 8.dp)
                 .padding(bottom = 16.dp)
         )
+        val selectedIndex = remember { mutableStateOf(-1) }
+        val touchEvent = remember { mutableStateOf<Offset?>(null) }
 
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(250.dp)
                 .padding(vertical = Margins.vertical)
         ) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .clickable {
+                    selectedLabel.value = null
+                    selectedIndex.value = -1
+                    touchEvent.value = null
+                })
             PieChart(
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Center),
                 pieChartData = pieChartDataModel.pieChartData,
                 sliceDrawer = SimpleSliceDrawer(
-                    sliceThickness = pieChartDataModel.sliceThickness
+                    sliceThickness = pieChartDataModel.sliceThickness.dp,
+                    selectedSliceThickness = pieChartDataModel.sliceThickness.dp + 5.dp
                 ),
-                keepSelection = true,
-                startSelection = 1,
-                onSelection = { slice ->
+                selectedIndex = selectedIndex.value,
+                onSelection = { index, slice ->
                     selectedLabel.value = slice
-                }
+                    selectedIndex.value = index
+                },
+                touchEvent = touchEvent
             )
         }
     }
@@ -122,7 +138,7 @@ private fun SliceThicknessRow(sliceThickness: Float, onValueUpdated: (Float) -> 
         Slider(
             value = sliceThickness,
             onValueChange = { onValueUpdated(it) },
-            valueRange = 10f.rangeTo(100f)
+            valueRange = 1f.rangeTo(20f)
         )
     }
 }
@@ -149,10 +165,8 @@ private fun AddOrRemoveSliceRow(pieChartDataModel: PieChartDataModel) {
         ) {
             Text(text = "Slices: ")
             Text(
-                text = pieChartDataModel.slices.count().toString(),
-                style = TextStyle(
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 18.sp
+                text = pieChartDataModel.slices.count().toString(), style = TextStyle(
+                    fontWeight = FontWeight.ExtraBold, fontSize = 18.sp
                 )
             )
         }
@@ -168,4 +182,4 @@ private fun AddOrRemoveSliceRow(pieChartDataModel: PieChartDataModel) {
 
 @Preview
 @Composable
-fun PieChartScreenPreview() = PieChartScreen()
+private fun PieChartScreenPreview() = PieChartScreen()
