@@ -142,10 +142,9 @@ fun LineChart(
             scope = this,
             xAxisDrawer = xAxisDrawer,
             xAxisDrawableArea = xAxisDrawableArea,
-            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
             yAxisDrawableArea = yAxisDrawableArea,
+            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
             yAxisDrawer = yAxisDrawer,
-            isDragging = selectedIndex != null,
         )
 
         // Draw the chart line.
@@ -179,7 +178,6 @@ private fun drawAxis(
     yAxisDrawableArea: Rect,
     xAxisLabelsDrawableArea: Rect,
     yAxisDrawer: YAxisDrawer,
-    isDragging: Boolean,
 ) {
 
     // Draw the X Axis line.

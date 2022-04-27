@@ -1,4 +1,4 @@
-package com.github.tehras.charts.theme
+package de.luckyworks.compose.charts.sample.theme
 
 import androidx.compose.ui.unit.dp
 

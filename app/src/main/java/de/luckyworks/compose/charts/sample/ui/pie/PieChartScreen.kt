@@ -34,10 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.tehras.charts.theme.Margins
 import de.luckyworks.compose.charts.piechart.PieChart
 import de.luckyworks.compose.charts.piechart.PieChartData
 import de.luckyworks.compose.charts.piechart.renderer.SimpleSliceDrawer
+import de.luckyworks.compose.charts.sample.theme.Margins
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 
 @Composable
