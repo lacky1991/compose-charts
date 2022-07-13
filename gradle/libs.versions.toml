@@ -14,7 +14,7 @@ min_sdk_version = "21"
 target_sdk_version = "31"
 dokka = "1.6.21"
 compose = "1.1.1"
-compose_activity = "1.4.0"
+compose_activity = "1.5.0"
 compose_compiler = "1.2.0-alpha04"
 
 [libraries]
