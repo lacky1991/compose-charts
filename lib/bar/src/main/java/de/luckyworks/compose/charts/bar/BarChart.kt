@@ -72,12 +72,9 @@ fun BarChart(
                             barChartData = barChartData,
                             barDrawableArea = barDrawableArea,
                             touchEvent = touchEvent
-                        )?.also {
-                            if (index != -1) onSelection?.invoke(
-                                it,
-                                barChartData.bars[it],
-                                touchEvent
-                            )
+                        )?.also { index ->
+                            if (index != -1)
+                                onSelection?.invoke(index, barChartData.bars[index], touchEvent)
                         }
                     }
                     // Draw yAxis line.
