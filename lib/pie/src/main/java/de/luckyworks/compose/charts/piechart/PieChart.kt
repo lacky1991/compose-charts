@@ -82,7 +82,7 @@ private fun DrawChart(
                     progress = progress,
                 )
             }?.also { index ->
-                onSelection?.invoke(index, pieChartData.slices[index])
+                if (index != -1) onSelection?.invoke(index, pieChartData.slices[index])
             }
 
             slices.forEachIndexed { index, slice ->

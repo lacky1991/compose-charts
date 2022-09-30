@@ -104,7 +104,7 @@ fun LineChart(
                 chartDrawableArea = chartDrawableArea,
                 touchEvent = touchEvent
             )?.also {
-                onSelection?.invoke(it, lineChartData.points[it], touchEvent)
+                if (index != -1) onSelection?.invoke(it, lineChartData.points[it], touchEvent)
             }
         }
 
