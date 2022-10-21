@@ -103,8 +103,9 @@ fun LineChart(
                 lineChartData = lineChartData,
                 chartDrawableArea = chartDrawableArea,
                 touchEvent = touchEvent
-            )?.also {
-                onSelection?.invoke(it, lineChartData.points[it], touchEvent)
+            )?.also { index ->
+                if (index != -1)
+                    onSelection?.invoke(index, lineChartData.points[index], touchEvent)
             }
         }
 
@@ -142,10 +143,9 @@ fun LineChart(
             scope = this,
             xAxisDrawer = xAxisDrawer,
             xAxisDrawableArea = xAxisDrawableArea,
-            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
             yAxisDrawableArea = yAxisDrawableArea,
+            xAxisLabelsDrawableArea = xAxisLabelsDrawableArea,
             yAxisDrawer = yAxisDrawer,
-            isDragging = selectedIndex != null,
         )
 
         // Draw the chart line.
@@ -179,7 +179,6 @@ private fun drawAxis(
     yAxisDrawableArea: Rect,
     xAxisLabelsDrawableArea: Rect,
     yAxisDrawer: YAxisDrawer,
-    isDragging: Boolean,
 ) {
 
     // Draw the X Axis line.

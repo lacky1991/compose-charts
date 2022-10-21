@@ -28,15 +28,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.tehras.charts.theme.Margins.horizontal
-import com.github.tehras.charts.theme.Margins.vertical
-import com.github.tehras.charts.theme.Margins.verticalLarge
 import de.luckyworks.compose.charts.line.LineChart
 import de.luckyworks.compose.charts.line.LineChartData
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineDrawer
 import de.luckyworks.compose.charts.line.renderer.line.SolidLineShader
 import de.luckyworks.compose.charts.line.renderer.xaxis.NoLabelXAxisDrawer
 import de.luckyworks.compose.charts.line.renderer.yaxis.InsideSmallYAxisDrawer
+import de.luckyworks.compose.charts.sample.theme.Margins.horizontal
+import de.luckyworks.compose.charts.sample.theme.Margins.vertical
+import de.luckyworks.compose.charts.sample.theme.Margins.verticalLarge
 import de.luckyworks.compose.charts.sample.ui.ChartScreenStatus
 import de.luckyworks.compose.charts.sample.ui.line.LineChartDataModel.PointDrawerType
 

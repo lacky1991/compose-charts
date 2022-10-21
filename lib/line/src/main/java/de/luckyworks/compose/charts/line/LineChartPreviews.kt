@@ -21,7 +21,7 @@ private val testLineChartData = (1 until 10).map {
 
 @Preview
 @Composable
-private fun PreviewLineChart() {
+private fun _PreviewLineChart() {
     LineChart(
         modifier = Modifier.height(100.dp),
         lineChartData = LineChartData(testLineChartData)

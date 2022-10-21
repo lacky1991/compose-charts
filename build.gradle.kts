@@ -6,7 +6,7 @@ plugins {
     id("com.android.library") apply false
     kotlin("android") apply false
     alias(libs.plugins.detekt)
-    alias(libs.plugins.ktlint)
+  //  alias(libs.plugins.ktlint)
     alias(libs.plugins.versions)
     base
 }
@@ -14,34 +14,37 @@ plugins {
 allprojects {
     group = PUBLISHING_GROUP
 }
-val ktlintVersion = libs.versions.ktlint.get()
+//val ktlintVersion = libs.versions.ktlint.get()
 subprojects {
     apply {
         plugin("io.gitlab.arturbosch.detekt")
-        plugin("org.jlleitschuh.gradle.ktlint")
+        //    plugin("org.jlleitschuh.gradle.ktlint")
     }
 
-    ktlint {
-        debug.set(false)
-        version.set(ktlintVersion)
-        verbose.set(true)
-        android.set(false)
-        outputToConsole.set(true)
-        ignoreFailures.set(false)
-        enableExperimentalRules.set(true)
-        filter {
-            exclude("**/generated/**")
-            include("**/kotlin/**")
-        }
+    /* ktlint {
+         debug.set(false)
+         version.set(ktlintVersion)
+         verbose.set(true)
+         android.set(false)
+         outputToConsole.set(true)
+         ignoreFailures.set(false)
+         enableExperimentalRules.set(true)
+         filter {
+             exclude("**///generated
+    /**")
+    include("**/
+    //  kotlin
+    /**")
     }
+    }*/
 
     detekt {
         config = rootProject.files("config/detekt/detekt.yml")
         reports {
-            html {
-                enabled = true
-                destination = file("build/reports/detekt.html")
-            }
+                html {
+                    enabled = true
+                    destination = file("build/reports/detekt.html")
+                }
         }
     }
 }

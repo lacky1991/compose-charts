@@ -38,11 +38,6 @@ android {
         }
     }
 
-/* lint {
-        isWarningsAsErrors = true
-        isAbortOnError = true
-    } */
-
     buildFeatures {
         compose = true
     }

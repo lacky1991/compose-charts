@@ -15,15 +15,12 @@ fun Modifier.onTouch(
         onTouch(this@pointerInput, offset)
         if (tryAwaitRelease()) onRelease()
     })
+}.pointerInput(Unit) {
+    detectDragGestures(onDragCancel = { onRelease() },
+        onDragEnd = { onRelease() },
+        onDrag = { change, _ ->
+            onTouch(
+                this, change.position
+            )
+        })
 }
-    .pointerInput(Unit) {
-        detectDragGestures(
-            onDragCancel = { onRelease() },
-            onDragEnd = { onRelease() },
-            onDrag = { change, _ ->
-                onTouch(
-                    this,
-                    change.position
-                )
-            })
-    }
