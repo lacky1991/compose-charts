@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.6.10"
 ktlint = "0.43.2"
-detekt = "1.19.0"
+detekt = "1.23.7"
 junit = "4.13.2"
 androidx_test_ext = "1.1.5"
 androidx_test = "1.5.0"
